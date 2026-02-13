@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Бронь №{{ reservation.id }} — Claude Monet{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1 class="hero__title">Ваша бронь</h1>
+    <div class="hero__line"></div>
+    <p class="hero__sub">Все данные о бронировании и заказе</p>
+  </div>
+</section>
+
+<section class="details-grid">
+  <div class="container">
+
+    <div class="details-top">
+      <div class="panel">
+        <h2 class="panel__title">Данные брони</h2>
+
+        <div class="kv">
+          <div class="kv__k">Имя</div>
+          <div class="kv__v">{{ reservation.full_name }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Почта</div>
+          <div class="kv__v">{{ reservation.email }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Телефон</div>
+          <div class="kv__v">{{ reservation.phone }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Дата</div>
+          <div class="kv__v">{{ reservation.date }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Время</div>
+          <div class="kv__v">{{ reservation.time }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Гостей</div>
+          <div class="kv__v">{{ reservation.guests }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Пожелания</div>
+          <div class="kv__v">{{ reservation.notes or "—" }}</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title">Итог</h2>
+        <div class="kv">
+          <div class="kv__k">Номер брони</div>
+          <div class="kv__v">#{{ reservation.id }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Создано</div>
+          <div class="kv__v">{{ reservation.created_at }}</div>
+        </div>
+        <div class="kv">
+          <div class="kv__k">Сумма</div>
+          <div class="kv__v" style="color:var(--gold); font-size:20px;">{{ money(reservation.total_cents) }}</div>
+        </div>
+        <div style="margin-top:14px;">
+          <a class="btn" href="{{ url_for('menu') }}">Вернуться в меню</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+
+    <div class="panel">
+      <div class="admin-top">
+        <h2 class="panel__title" style="margin:0;">Ваш заказ</h2>
+        <div class="small-muted">Позиции: {{ items|length }}</div>
+      </div>
+
+      <div class="cart-list">
+        {% for it in items %}
+          <div class="cart-item">
+            <div class="cart-item__img">
+              <img src="{{ url_for('static', filename=it.image_path) }}" alt="{{ it.title }}">
+            </div>
+            <div>
+              <div class="cart-item__name">{{ it.title }}</div>
+              <div class="small-muted">Цена: {{ money(it.unit_price_cents) }}</div>
+            </div>
+            <div class="cart-item__price">{{ money(it.unit_price_cents) }}</div>
+            <div class="cart-item__qty">
+              <div class="small-muted">x</div>
+              <div class="qty__num">{{ it.qty }}</div>
+            </div>
+            <div class="cart-item__total">{{ money(it.line_total_cents) }}</div>
+            <div></div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="cart-sum">
+        <div class="cart-sum__label">Общий итог</div>
+        <div class="cart-sum__value">{{ money(reservation.total_cents) }}</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

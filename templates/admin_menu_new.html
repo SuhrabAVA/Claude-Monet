@@ -1,0 +1,132 @@
+{% extends "base_admin.html" %}
+{% block title %}Админ — Меню{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h1 class="admin-title">Меню</h1>
+      <p class="admin-sub">Добавляй категории и блюда. Всё сохраняется в <b>menu_data.json</b> и остаётся после перезапуска.</p>
+    </div>
+    <div class="admin-actions">
+      <a class="btn" href="{{ url_for('admin_bookings') }}">← Брони</a>
+      <a class="btn" href="{{ url_for('menu') }}">Открыть меню сайта</a>
+    </div>
+  </div>
+
+  <div class="admin-grid">
+    <div class="admin-card">
+      <div class="admin-card__hd">
+        <div class="admin-card__title">Добавление</div>
+        <div class="admin-tools">
+          <a class="btn {{ 'btn--gold' if tab=='item' else '' }}" href="{{ url_for('admin_menu_new', tab='item') }}">Блюдо</a>
+          <a class="btn {{ 'btn--gold' if tab=='category' else '' }}" href="{{ url_for('admin_menu_new', tab='category') }}">Категория</a>
+        </div>
+      </div>
+
+      <div class="admin-card__bd">
+        {% if tab == 'category' %}
+          <form method="post" class="form-grid">
+            <input type="hidden" name="form_type" value="category">
+
+            <div class="span2">
+              <div class="small">Название категории *</div>
+              <input class="input" name="label" placeholder="Например: Супы" required>
+            </div>
+
+            <div class="span2">
+              <div class="small">Slug (латиница, можно пусто)</div>
+              <input class="input" name="slug" placeholder="Например: soups">
+              <div class="small" style="margin-top:8px;">Если оставить пустым — slug создастся автоматически.</div>
+            </div>
+
+            <div class="span2" style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
+              <button class="btn btn--gold" type="submit">Добавить категорию</button>
+            </div>
+          </form>
+
+          <div class="hr"></div>
+          <div class="small" style="margin-bottom:8px;">Существующие категории</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            {% for c in categories %}
+              <span class="badge">{{ c.label }} · <span style="opacity:.8;">{{ c.slug }}</span></span>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <form method="post" enctype="multipart/form-data" class="form-grid">
+            <input type="hidden" name="form_type" value="item">
+
+            <div>
+              <div class="small">Категория *</div>
+              <select class="select" name="category_slug" required>
+                <option value="" disabled selected>Выберите категорию</option>
+                {% for c in categories %}
+                  <option value="{{ c.slug }}">{{ c.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div>
+              <div class="small">Цена (в ₸) *</div>
+              <input class="input" name="price" placeholder="Например: 18 или 18.5" required>
+            </div>
+
+            <div class="span2">
+              <div class="small">Название *</div>
+              <input class="input" name="title" placeholder="Например: Soupe à l'Oignon" required>
+            </div>
+
+            <div class="span2">
+              <div class="small">Описание *</div>
+              <textarea class="textarea" name="description" placeholder="Коротко и вкусно описать блюдо…" required></textarea>
+            </div>
+
+            <div class="span2">
+              <div class="small">Ингредиенты (через запятую)</div>
+              <input class="input" name="ingredients" placeholder="лук, бульон, грюйер, гренки">
+            </div>
+
+            <div class="span2">
+              <div class="small">Аллергены (через запятую)</div>
+              <input class="input" name="allergens" placeholder="Глютен, Молочные продукты">
+            </div>
+
+            <div class="span2">
+              <div class="small">Картинка — путь (если уже лежит в static)</div>
+              <input class="input" name="image_path" placeholder="img/menu/new.jpg">
+              <div class="small" style="margin-top:8px;">Или просто загрузите файл ниже (это удобнее).</div>
+            </div>
+
+            <div class="span2">
+              <div class="small">Загрузить картинку (PNG/JPG/WEBP)</div>
+              <input class="input" name="image_file" type="file" accept="image/*">
+            </div>
+
+            <div class="span2">
+              <div class="small">Винное сопровождение (необязательно)</div>
+              <div class="form-grid">
+                <div>
+                  <input class="input" name="wine_title" placeholder="Заголовок, например: Винное сопровождение">
+                </div>
+                <div>
+                  <input class="input" name="wine_text" placeholder="Текст рекомендации">
+                </div>
+              </div>
+            </div>
+
+            <div class="span2" style="display:flex; justify-content:flex-end; gap:10px; align-items:center;">
+              <button class="btn btn--gold" type="submit">Добавить блюдо</button>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="admin-row">
+      <div class="small">Админка намеренно без шапки/подвала сайта — только нужные действия.</div>
+      <a class="btn" href="{{ url_for('admin_bookings') }}">Открыть брони</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

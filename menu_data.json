@@ -1,0 +1,9 @@
+{
+  "categories": [
+    { "slug": "zakuski", "label": "Закуски" },
+    { "slug": "mains",   "label": "Основные блюда" },
+    { "slug": "desserts", "label": "Десерты" },
+    { "slug": "drinks",   "label": "Напитки" }
+  ],
+  "items": []
+}

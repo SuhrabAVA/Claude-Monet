@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Меню — Claude Monet{% endblock %}
+
+{% block content %}
+
+<section class="menu-hero" style="background-image:url('{{ url_for('static', filename='img/menu_hero.jpg') }}')">
+  <div class="menu-hero__overlay"></div>
+  <div class="container menu-hero__content">
+    <h1 class="menu-hero__title">Наше меню</h1>
+    <div class="menu-hero__line"></div>
+    <div class="menu-hero__subtitle">
+      Тщательно отобранная коллекция французской классики и современных творений,<br/>
+      приготовленных из лучших сезонных ингредиентов
+    </div>
+  </div>
+</section>
+
+
+<div class="menu-nav">
+  <div class="container menu-nav__row">
+    {% for c in categories %}
+      <a class="menu-chip {{ 'is-active' if c.slug==active_section else '' }}"
+         href="{{ url_for('menu', section=c.slug) }}#{{ c.slug }}">
+        {{ c.label }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% for c in categories %}
+  <section class="menu-section" id="{{ c.slug }}">
+    <div class="container">
+      <h2 class="menu-section__title">{{ c.label }}</h2>
+      <div class="menu-section__line"></div>
+
+      <div class="menu-grid">
+        {% for item in grouped.get(c.slug, []) %}
+
+          
+          <a class="menu-card menu-card--link"
+             href="{{ url_for('dish', item_id=item.id) }}"
+             aria-label="Открыть: {{ item.title }}">
+
+            <div class="menu-card__img">
+              <img src="{{ url_for('static', filename=item.img) }}" alt="{{ item.title }}">
+              <div class="menu-card__imgShade"></div>
+            </div>
+
+            <div class="menu-card__body">
+              <div class="menu-card__top">
+                <div class="menu-card__name">{{ item.title }}</div>
+                <div class="menu-card__price">{{ item.price }}</div>
+              </div>
+
+              <div class="menu-card__desc">{{ item.desc }}</div>
+            </div>
+
+          </a>
+
+        {% endfor %}
+        
+        {% if not grouped.get(c.slug) %}
+          <div class="menu-empty">Пока нет позиций…</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <div class="menu-sep"></div>
+{% endfor %}
+
+<div class="menu-note">
+  <div class="container">
+    <div class="menu-note__text">
+      Меню и цены могут меняться в зависимости от сезонной доступности продуктов
+    </div>
+    <div class="menu-note__text">
+      Пожалуйста, сообщите официанту о любых диетических ограничениях или аллергии
+    </div>
+  </div>
+</div>
+
+{% endblock %}

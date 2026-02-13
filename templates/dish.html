@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} — Claude Monet{% endblock %}
+
+{% block content %}
+
+<section class="dish-page">
+  <div class="container">
+
+    <a class="dish-back" href="{{ url_for('menu', section=item.cat) }}#{{ item.cat }}">
+      ← Вернуться к меню
+    </a>
+
+    <div class="dish-grid">
+
+      <!-- LEFT: image -->
+      <div class="dish-left">
+        <div class="dish-photo">
+          <img src="{{ url_for('static', filename=item.img) }}" alt="{{ item.title }}">
+        </div>
+      </div>
+
+      <!-- RIGHT: info -->
+      <div class="dish-right">
+
+        <div class="dish-pill">{{ category_badge }}</div>
+
+        <h1 class="dish-title">{{ item.title }}</h1>
+        <div class="dish-title-line"></div>
+
+        <div class="dish-sub">
+          {{ item.desc }}
+        </div>
+
+        <!-- Ingredients -->
+        {% if item.ingredients %}
+          <div class="dish-block">
+            <div class="dish-block__label">Ингредиенты</div>
+            <div class="tag-row">
+              {% for t in item.ingredients %}
+                <span class="tag">{{ t }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Allergens -->
+        {% if item.allergens %}
+          <div class="dish-block">
+            <div class="dish-block__label">Аллергены</div>
+            <div class="tag-row">
+              {% for t in item.allergens %}
+                <span class="tag tag--danger">{{ t }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="dish-hr"></div>
+
+        <!-- Price + qty -->
+        <div class="dish-buy">
+          <div class="dish-price">
+            <div class="dish-price__label">Цена</div>
+            <div class="dish-price__value">{{ item.price }}</div>
+          </div>
+
+          <div class="dish-qty">
+            <a class="qty-btn" href="{{ url_for('dish', item_id=item.id, qty=(qty-1 if qty>1 else 1)) }}">−</a>
+            <div class="qty-val">{{ qty }}</div>
+            <a class="qty-btn" href="{{ url_for('dish', item_id=item.id, qty=(qty+1)) }}">+</a>
+          </div>
+        </div>
+
+        <!-- Add to cart -->
+        <form method="post" class="dish-cart">
+          <input type="hidden" name="action" value="add_to_cart">
+          <input type="hidden" name="qty" value="{{ qty }}">
+
+          <button class="dish-cart-btn" type="submit">
+            <span class="cart-ico" aria-hidden="true">
+              <!-- inline svg cart -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M6 6h15l-2 9H7L6 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M6 6 5 3H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="currentColor"/>
+                <path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="currentColor"/>
+              </svg>
+            </span>
+            Добавить в корзину
+          </button>
+        </form>
+
+        <div class="dish-note">
+          Все блюда готовятся свежими на заказ. Пожалуйста, учтите время приготовления.
+          Если у вас есть диетические ограничения или аллергия, пожалуйста, сообщите вашему официанту.
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Wine section -->
+<section class="wine">
+  <div class="container">
+    <h2 class="wine-title">{{ item.wine_title }}</h2>
+    <div class="wine-line"></div>
+    <div class="wine-text">
+      {{ item.wine_text }}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

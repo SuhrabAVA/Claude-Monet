@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Claude Monet — Главная{% endblock %}
+
+{% block content %}
+
+<section class="hero" style="background-image:url('{{ url_for('static', filename='img/hero.jpg') }}')">
+  <div class="hero__overlay"></div>
+  <div class="container hero__content">
+    <h1 class="hero__title">Claude Monet</h1>
+    <div class="hero__subtitle">Искусство французской кухни</div>
+    <div class="hero__desc">
+      Откройте для себя искусство французской кухни в атмосфере вневременной элегантности
+    </div>
+
+    <div class="hero__actions">
+      <a class="btn btn--gold" href="{{ url_for('menu') }}">Посмотреть меню</a>
+      <a class="btn btn--outline" href="{{ url_for('booking') }}">Забронировать столик</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">О нас</h2>
+    <div class="section__line"></div>
+
+    <div class="about">
+      <div class="about__img">
+        <img src="{{ url_for('static', filename='img/about.jpg') }}" alt="О нас">
+      </div>
+
+      <div class="about__text">
+        <div class="about__heading">{{ about.title }}</div>
+        <p>{{ about.p1 }}</p>
+        <p>{{ about.p2 }}</p>
+        <p>{{ about.p3 }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container features">
+    {% for f in features %}
+      <div class="feature-card">
+        <div class="feature-card__icon">{{ f.icon }}</div>
+        <div class="feature-card__title">{{ f.title }}</div>
+        <div class="feature-card__text">{{ f.text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">Отзывы гостей</h2>
+    <div class="section__line"></div>
+    <div class="section__hint">Узнайте, что говорят наши гости о своих гастрономических впечатлениях</div>
+
+    <div class="reviews">
+      {% for r in reviews %}
+        <div class="review-card">
+          <div class="stars">
+            {% for _ in range(r.stars) %}★{% endfor %}
+          </div>
+          <div class="review-card__quote">“{{ r.quote }}”</div>
+          <div class="review-card__divider"></div>
+          <div class="review-card__name">{{ r.name }}</div>
+          <div class="review-card__date">{{ r.date }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

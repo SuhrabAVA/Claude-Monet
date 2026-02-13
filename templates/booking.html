@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-title">Бронирование</h1>
+    <div class="page-title-underline"></div>
+    <p class="page-subtitle">
+      Забронируйте столик и присоединитесь к нам в незабываемом кулинарном путешествии
+    </p>
+  </div>
+</section>
+
+<section class="cart-section" id="cart">
+  <div class="container">
+    <div class="cart-card">
+      <div class="cart-head">
+        <div class="cart-head-left">
+          <h2 class="cart-title">Корзина</h2>
+          {% if cart_count > 0 %}
+            <div class="cart-badge">
+              <span class="cart-badge-dot"></span>
+              <span>{{ cart_count }} шт.</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="cart-head-right">
+          <div class="cart-total-box">
+            <div class="cart-total-label">Итоговая стоимость</div>
+            <div class="cart-total-value">{{ cart_total }}</div>
+          </div>
+
+          {% if cart_count > 0 %}
+          <form method="post" action="{{ url_for('booking') }}" class="cart-clear-form">
+            <input type="hidden" name="action" value="cart_clear">
+            <button type="submit" class="btn btn-outline btn-sm">Очистить корзину</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if cart_count == 0 %}
+        <div class="cart-empty">
+          <div class="cart-empty-title">Ваша корзина пуста</div>
+          <div class="cart-empty-text">Добавьте блюда из меню, и они появятся здесь.</div>
+          <a class="btn btn-gold" href="{{ url_for('menu') }}">Перейти в меню</a>
+        </div>
+      {% else %}
+        <div class="cart-list">
+          {% for item in cart_items %}
+          <div class="cart-item">
+            <div class="cart-item-thumb">
+              <img
+                src="{{ url_for('static', filename=item.img) }}"
+                alt="{{ item.title }}"
+                loading="lazy"
+              >
+            </div>
+
+            <div class="cart-item-info">
+              <div class="cart-item-name">{{ item.title }}</div>
+              <div class="cart-item-meta">
+                <span class="cart-item-price">Цена: <b>{{ item.price_str }}</b></span>
+                <span class="cart-item-line">Итого: <b>{{ item.line_str }}</b></span>
+              </div>
+            </div>
+
+            <div class="cart-item-actions">
+              <form method="post" action="{{ url_for('booking') }}" class="qty-form">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+
+                <button class="qty-btn" type="submit" name="action" value="cart_dec" aria-label="Уменьшить">
+                  –
+                </button>
+
+                <div class="qty-value">{{ item.qty }}</div>
+
+                <button class="qty-btn" type="submit" name="action" value="cart_inc" aria-label="Увеличить">
+                  +
+                </button>
+
+                <button class="remove-btn" type="submit" name="action" value="cart_remove" aria-label="Удалить">
+                  ×
+                </button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart-footer">
+          <div class="cart-footer-left">
+            <div class="cart-note">
+              Все блюда готовятся свежими на заказ. Если у вас есть аллергии или ограничения —
+              укажите это в “Особых пожеланиях”.
+            </div>
+          </div>
+
+          <div class="cart-footer-right">
+            <div class="cart-grand">
+              <div class="cart-grand-label">К оплате</div>
+              <div class="cart-grand-value">{{ cart_total }}</div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="booking-section">
+  <div class="container">
+    <div class="booking-grid">
+      <!-- LEFT -->
+      <div class="booking-left">
+        <h2 class="block-title">Посетите нас</h2>
+
+        <div class="info-list">
+          <div class="info-row">
+            <div class="info-ico">📍</div>
+            <div>
+              <div class="info-label">Адрес</div>
+              <div class="info-text">123 Rue des Beaux-Arts<br>75006 Париж, Франция</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-ico">📞</div>
+            <div>
+              <div class="info-label">Телефон</div>
+              <div class="info-text">+33 1 23 45 67 89</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-ico">✉️</div>
+            <div>
+              <div class="info-label">Email</div>
+              <div class="info-text">reservations@claudemonet.fr</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-ico">🕒</div>
+            <div>
+              <div class="info-label">Часы работы</div>
+              <div class="info-text">
+                Вторник – Суббота<br>
+                Обед: 12:00 – 14:30<br>
+                Ужин: 19:00 – 22:30<br><br>
+                Воскресенье: 12:00 – 1:00<br>
+                Понедельник: Выходной
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rules-card">
+          <div class="rules-title">Правила бронирования</div>
+          <ul class="rules-list">
+            <li>Рекомендуется бронировать заранее, до 30 дней</li>
+            <li>Пожалуйста, прибывайте в течение 15 минут после времени бронирования</li>
+            <li>Для групп от 8 человек, пожалуйста, позвоните нам напрямую</li>
+            <li>Дресс-код: элегантная повседневная одежда</li>
+            <li>Отмена бронирования должна быть сделана за 24 часа</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="booking-right">
+        <h2 class="block-title">Забронировать столик</h2>
+
+        <form method="post" action="{{ url_for('booking') }}" class="booking-form">
+          <input type="hidden" name="action" value="booking_submit">
+
+          <div class="field">
+            <label>Полное имя <span class="req">*</span></label>
+            <input type="text" name="full_name" placeholder="" required>
+          </div>
+
+          <div class="field">
+            <label>Электронная почта <span class="req">*</span></label>
+            <input type="email" name="email" placeholder="" required>
+          </div>
+
+          <div class="field">
+            <label>Номер телефона <span class="req">*</span></label>
+            <input type="text" name="phone" placeholder="" required>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label>Дата <span class="req">*</span></label>
+              <input type="date" name="date" required>
+            </div>
+            <div class="field">
+              <label>Время <span class="req">*</span></label>
+              <input type="time" name="time" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Количество гостей <span class="req">*</span></label>
+            <select name="guests" required>
+              <option value="1">1 гость</option>
+              <option value="2" selected>2 гостя</option>
+              <option value="3">3 гостя</option>
+              <option value="4">4 гостя</option>
+              <option value="5">5 гостей</option>
+              <option value="6">6 гостей</option>
+              <option value="7">7 гостей</option>
+              <option value="8">8 гостей</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Особые пожелания</label>
+            <textarea name="notes" rows="5" placeholder="Диетические ограничения, особые случаи, предпочтения по размещению..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-gold btn-wide">Отправить запрос</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
